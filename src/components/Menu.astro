@@ -1,0 +1,33 @@
+---
+import '../styles/menu.css';
+
+export interface Props {
+	data: {path: string, label: string}[];
+}
+
+const { data } = Astro.props;
+---
+
+<nav class="menu">
+	<ul class="menu__list">
+		{data.map(item => (
+			<li class="menu__list-item">
+				{ Astro.url.pathname === item.path ?
+					<a 
+						href={item.path}
+						class="menu__list-item-link menu__list-item-link--active"
+						>
+						{item.label}
+						</a>
+						:
+						<a 
+						href={item.path}
+						class="menu__list-item-link"
+					>
+						{item.label}
+					</a>
+				}
+			</li>
+		))}
+	</ul>
+</nav>

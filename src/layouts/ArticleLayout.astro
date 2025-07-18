@@ -1,0 +1,172 @@
+---
+import '../styles/global.css';
+import { site } from "../data/siteMetaData.js";
+import { getCollection } from 'astro:content';
+import Pagination from '../components/Pagination.astro';
+import Tag from '../components/Tag.astro';
+import CompactHeader from '../components/CompactHeader.astro';
+
+export interface Props {
+  frontmatter: {
+    postTitle: string;
+    description: string;
+    date: Date;
+    tags: string[];
+    isDraft: boolean;
+    isArchived: boolean;
+    layout?: string;
+  };
+  previousArticle?: {
+    slug: string;
+    postTitle: string;
+  };
+  nextArticle?: {
+    slug: string;
+    postTitle: string;
+  };
+}
+
+const { frontmatter, previousArticle, nextArticle } = Astro.props;
+const { postTitle, description } = frontmatter;
+const { title } = site;
+const { author } = site;
+const { name } = author;
+
+// Map tag names to URL slugs
+const tagMapping = {
+  'Career Journal': 'career-journal',
+  'Checklists & Guides': 'checklists-guides',
+  'Lessons Learned': 'lessons-learned',
+  'Opinion Pieces': 'opinion'
+};
+
+// Format date with more detail (without weekday)
+const formatDate = (date: Date) => {
+  const options: Intl.DateTimeFormatOptions = { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric'
+  };
+  return new Date(date).toLocaleDateString('en-US', options);
+};
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.png" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{`${postTitle} - ${title}`}</title>
+		<meta name="description" content={description} />
+	</head>
+	<body>
+    <CompactHeader />
+    <div class="content">
+      <div class="content__inner">
+        <div class="content-wrapper">
+          <article class="article-single">
+            <div class="article-single__inner">
+              <header class="article-header">
+                <div class="article-header-content">
+                  <div class="article-meta">
+                    <time class="article-date" datetime={frontmatter.date.toISOString()}>
+                      {formatDate(frontmatter.date)}
+                    </time>
+                  </div>
+                  <h1 class="article-title">{postTitle}</h1>
+                  {frontmatter.tags && (
+                    <div class="article-tags">
+                      {frontmatter.tags.map(tag => {
+                        const tagSlug = tagMapping[tag];
+                        return tagSlug ? (
+                          <Tag tag={tag} href={`/tags/${tagSlug}`} size="large" />
+                        ) : (
+                          <Tag tag={tag} size="large" />
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </header>
+              
+              <div class="article-body">
+                <slot />
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <Pagination 
+      type="article-navigation"
+      previousArticle={previousArticle}
+      nextArticle={nextArticle}
+      layout="full"
+    />
+  </body>
+</html>
+
+<style>
+  .content {
+    min-height: 100vh;
+    background: linear-gradient(
+      135deg,
+      var(--color-background) 0%,
+      #0a2a4a 50%,
+      #1a3a5a 100%
+    );
+    padding: var(--space-lg) 0;
+  }
+
+  .content__inner {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .content-wrapper {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .article-single__inner {
+    position: relative;
+  }
+
+  .article-header-content {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .article-meta {
+    margin-bottom: var(--space-md);
+  }
+  
+  .article-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: var(--space-md);
+  }
+
+  .article-header {
+    padding-top: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .content {
+      padding: var(--space-md) 0;
+    }
+
+    .article-tags {
+      gap: 0.25rem;
+    }
+    
+    .article-header {
+      padding-top: 0.75rem;
+    }
+  }
+</style>

@@ -1,0 +1,47 @@
+---
+import '../styles/global.css';
+import { site } from "../data/siteMetaData.js";
+import CompactHeader from '../components/CompactHeader.astro';
+
+export interface Props {
+  frontmatter:  {pageTitle: string, description: string};
+}
+
+const { frontmatter } = Astro.props;
+const { pageTitle, description } = frontmatter;
+const { title } = site;
+const { author } = site;
+const { name } = author;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.png" />
+		<meta name="generator" content={Astro.generator} />
+    <title>{`${pageTitle} - ${title}`}</title>
+    <meta name="description" content={description} />
+	</head>
+	<body>
+    <CompactHeader />
+    <div class="content">
+      <div class="content__inner">
+        <div class="content-wrapper">
+          <div class="page-single">
+            <div class="page-single__inner">
+              <header class="page-header">
+                <h1 class="page-title">{pageTitle}</h1>
+              </header>
+              
+              <div class="page-body">
+                <slot />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

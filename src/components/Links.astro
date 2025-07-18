@@ -1,0 +1,29 @@
+---
+import '../styles/links.css';
+import twitterIcon from '../../public/twitter.svg'
+import githubIcon from '../../public/github.svg'
+
+export interface Props {
+	data: { name: string; twitter: string; github: string; };
+}
+
+const { data } = Astro.props;
+---
+
+<div class="links">
+	<ul class="links__list">
+		<li class="links__list-item">
+			<a
+				href={`https://www.twitter.com/${data.twitter}`}
+				target="_blank"
+			>
+				<img src={twitterIcon.src} />
+			</a>
+		</li>
+		<li class="links__list-item">
+			<a href={`https://www.github.com/${data.github}`} target="_blank">
+				<img src={githubIcon.src} />
+			</a>
+		</li>
+	</ul>
+</div>

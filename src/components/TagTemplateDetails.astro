@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import ArticleAbstract from './ArticleAbstract.astro';
+
+export interface Props {
+	term: string;
+}
+
+const { term } = Astro.props;
+
+const allArticles = await getCollection('articles');
+const filteredArticles = allArticles.filter(({ data }) => {
+  return data.tags.includes(term);
+}).sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+---
+
+<div class="tag-articles">
+  {filteredArticles.map(article => <ArticleAbstract node={article} />)}
+</div>

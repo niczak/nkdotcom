@@ -1,0 +1,58 @@
+---
+import '../styles/post.css';
+import { formatDate, isBeforeDate } from '../utils/dateFormat';
+import Tag from './Tag.astro';
+
+const { node, showTagLinks = true } = Astro.props;
+const { postTitle, description, date, tags } = node.data
+const slug = node.slug
+
+// Format date with full details (without weekday)
+const formatFullDate = (date: Date) => {
+	const options: Intl.DateTimeFormatOptions = { 
+		year: 'numeric', 
+		month: 'long', 
+		day: 'numeric'
+	};
+	return new Date(date).toLocaleDateString('en-US', options);
+};
+---
+
+<div class="post">
+	{tags && tags.length > 0 && (
+		<div class="post__tags">
+			{tags.map(tag => (
+				showTagLinks ? (
+					<Tag tag={tag} href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`} size="small" />
+				) : (
+					<Tag tag={tag} size="small" />
+				)
+			))}
+		</div>
+	)}
+	<div class="post__meta">
+		{isBeforeDate(date, '2007-05-06') ? (
+			<time class="post__meta-time">Written Sometime Before 2007</time>
+		) : (
+			<time
+				class="post__meta-time"
+				datetime={formatDate(date)}
+			>
+				{formatFullDate(date)}
+			</time>
+		)}
+
+		<span class="post__meta-divider" />
+	</div>
+	<h2 class="post__title">
+		<a class="post__title-link" href={"/articles/"+slug}>
+			{postTitle}
+		</a>
+	</h2>
+	<p class="post__description">
+		{description}
+	</p>
+	<!-- <p>
+		<a class="post__readmore" href={"/"+slug}> Read More →</a>
+	</p> -->
+</div>

@@ -1,2 +1,3 @@
-# nkdotcom
-nicholaskreidberg.com static website
+MarcGrabanski.com
+
+There's just astro in here with some MDX posts, nothing else.

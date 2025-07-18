@@ -1,0 +1,124 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site } from "../data/siteMetaData.js";
+
+---
+
+<Layout title={site.title}>
+	<div class="hero-section">
+		<div class="hero-content">
+			<div class="hero-text">
+				<h1 class="hero-title">
+					<span class="highlight">Nicholas Kreidberg</span>
+					<br />
+					<span class="subtitle">Software Engineer, Technology Leader, Team Builder</span>
+				</h1>
+				<p class="hero-description">
+					Helping developers achieve technical excellence while building award winning teams with outstanding culture.
+				</p>
+				<p class="hero-subdescription">
+					Accomplished engineering leader with 20 years of delivering high-performance software and a proven track record of building motivated, agile teams that consistently exceed business goals.
+				</p>
+
+				<!-- Navigation Menu -->
+				<nav class="hero-navigation">
+					<ul class="nav-list">
+						{site.menu.map(item => (
+							<li class="nav-item">
+								<a href={item.path} class="nav-link">
+									{item.label}
+								</a>
+							</li>
+						))}
+					</ul>
+					<div class="social-links">
+                        <a href={`https://www.linkedin.com/in/${site.author.linkedin}`} target="_blank" class="social-link">
+							<img src="/linkedin.svg" alt="LinkedIn" class="social-icon" />
+						</a>
+						<a href={`https://www.github.com/${site.author.github}`} target="_blank" class="social-link">
+							<img src="/github.svg" alt="GitHub" class="social-icon" />
+						</a>
+                        <a href={`https://www.twitter.com/${site.author.twitter}`} target="_blank" class="social-link">
+							<img src="/twitter.svg" alt="Twitter" class="social-icon" />
+						</a>
+					</div>
+				</nav>
+			</div>
+			<div class="hero-image">
+				<img src="/nk.jpg" alt="Nicholas Kreidberg" class="profile-photo" />
+			</div>
+		</div>
+	</div>
+
+	<div class="content">
+		<div class="content__inner">
+			<div class="content-wrapper">
+				<!-- Testimonials Section -->
+				<section class="testimonials-section">
+					<div class="testimonials-header">
+						<h2 class="section-title">📣 Praise from Others</h2>
+						<a href="https://www.linkedin.com/in/niczak/" target="_blank" class="view-all-link">View Full Testimonials →</a>
+					</div>
+					<div class="testimonials-list">
+                        <blockquote class="testimonial-quote">
+							Nicholas is an excellent lead software engineer and consistently delivered many business-critical features throughout several challenges. Nick is a great, collaborative team member and has a very strong work ethic. He is dedicated to the team's success, versatile and makes valuable contributions every day.
+							<footer class="testimonial-author">
+								<strong>Anna Duray</strong>
+								<span>Senior Director of Software Engineering</span>
+							</footer>
+						</blockquote>
+						<blockquote class="testimonial-quote">
+							I've yet to work with anyone else at the lead level who fostered such a collaborative, positive learning environment for the engineers around him. His deep knowledge of both software design and the business domain helped our team push the boundaries of what was possible to build within a vast, complex software monolith. He has a sharp sense of priorities and an ever sharper sense of humor. I'd recommend working with him to anyone.
+							<footer class="testimonial-author">
+								<strong>Kevin Kapolnek</strong>
+								<span>Staff Software Engineer</span>
+							</footer>
+						</blockquote>
+						<blockquote class="testimonial-quote">
+							Nicholas is an extraordinary developer. Not only does he know his craft well, he is a great strategist and creative problem-solver.
+							<footer class="testimonial-author">
+								<strong>Demian Brink</strong>
+								<span>Chief Analytics & Data Officer</span>
+							</footer>
+						</blockquote>
+					</div>
+				</section>
+
+				<!-- Connect Section -->
+				<!-- <section class="connect-section">
+					<h2 class="section-title">🤝 Connect with Me</h2>
+					<div class="connect-grid">
+						<a href="https://linkedin.com/in/niczak" class="connect-card">
+							<div class="connect-icon">💼</div>
+							<h3>LinkedIn</h3>
+							<p>Career & professional</p>
+						</a>
+						<a href="https://github.com/niczak" class="connect-card">
+							<div class="connect-icon">💻</div>
+							<h3>GitHub</h3>
+							<p>Open source contributions</p>
+						</a>
+						<a href="https://twitter.com/niczak" class="connect-card">
+							<div class="connect-icon">🐦</div>
+							<h3>Twitter / X</h3>
+							<p>Personal updates & thoughts</p>
+						</a>
+					</div>
+				</section> -->
+
+				<!-- Summary Section -->
+				<section class="summary-section">
+					<div class="summary-content">
+						<p class="summary-text">
+							As an engineer and technology leader, I focus on meaningful work that improves the lives of others while also working to help other engineers grow and achieve success.
+						</p>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+</Layout>
+
+
+
+

@@ -1,0 +1,24 @@
+@import url("variables.css");
+@import url("base/normalize.css");
+@import url("base/generic.css");
+@import url("base/highlight.css");
+@import url("post.css");
+@import url("posttemplatedetails.css");
+@import url("pagetemplatedetails.css");
+@import url("menu.css");
+@import url("links.css");
+@import url("sidebar.css");
+@import url("about.css");
+@import url("home.css");
+@import url("article.css");
+
+/* Homepage layout - full width without sidebar */
+.layout-home {
+  width: 100%;
+  max-width: 100%;
+}
+
+.layout-home .content {
+  width: 100%;
+  max-width: 100%;
+}

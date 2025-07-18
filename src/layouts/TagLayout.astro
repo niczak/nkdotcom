@@ -1,0 +1,101 @@
+---
+import '../styles/global.css';
+import { site } from "../data/siteMetaData.js";
+import CompactHeader from '../components/CompactHeader.astro';
+
+export interface Props {
+  term: string;
+  icon: string;
+  description: string;
+}
+
+const { term, icon, description } = Astro.props;
+const { title } = site;
+const { author } = site;
+const { name } = author;
+const pageTitle = `All Posts Tagged as "${term}"`;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.png" />
+		<meta name="generator" content={Astro.generator} />
+    <title>{`${pageTitle} - ${title}`}</title>
+	</head>
+	<body>
+		<CompactHeader />
+		<div class="content">
+			<div class="content__inner">
+				<div class="content-wrapper">
+					<div class="tag-index">
+						<div class="tag-header">
+							<div class="tag-icon">{icon}</div>
+							<h1 class="section-title">{term}</h1>
+							<p class="tag-description">{description}</p>
+						</div>
+						<div class="tag-content">
+							<slot />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+
+<style>
+  .tag-index {
+    max-width: var(--layout-width-compact);
+    margin: 0 auto;
+    padding: 2rem 0;
+  }
+
+  .tag-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .tag-icon {
+    font-size: 4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .tag-header .section-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+    color: var(--color-base);
+  }
+
+  .tag-description {
+    font-size: 1.2rem;
+    color: var(--color-muted);
+    margin-bottom: 0;
+  }
+
+  .tag-content {
+    margin-bottom: 3rem;
+  }
+
+  .tag-articles-list {
+    margin-bottom: 3rem;
+  }
+
+  @media (max-width: 768px) {
+    .tag-icon {
+      font-size: 3rem;
+    }
+    
+    .tag-header .section-title {
+      font-size: 2rem;
+    }
+    
+    .tag-description {
+      font-size: 1rem;
+    }
+  }
+</style>

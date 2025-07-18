@@ -1,0 +1,16 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site } from "../data/siteMetaData.js";
+---
+
+<Layout title={site.title}>
+	<div class="content">
+		<div class="content__inner">
+			<div class="page">
+				<h1 class="page__title">404 Page Not Found</h1>
+                <p>Sorry, I couldn't find what you were looking for.</p>
+                <p><a href="/">&lt; Back to Home</a></p>
+			</div>
+		</div>
+	</div>
+</Layout>

@@ -1,0 +1,121 @@
+---
+import '../styles/posttemplatedetails.css';
+import { site } from "../data/siteMetaData.js";
+import { formatDate, isBeforeDate } from '../utils/dateFormat';
+import profilePic from '../../public/photo.jpg';
+import Links from './Links.astro';
+import { getCollection } from "astro:content";
+
+const { author, subtitle } = site;
+const { post } = Astro.props;
+
+const tags = post.tags.map((postTag: string) => {
+  const tagObject = site.menu.find(menuElement => menuElement.label === postTag)
+  return tagObject
+});
+
+const allArticles = await getCollection("articles");
+const articleIndex = allArticles.findIndex(currentArticle => currentArticle.slug === post.slug);
+const prev = allArticles[articleIndex + 1];
+const next = allArticles[articleIndex - 1];
+---
+
+<div class="article-template">
+  <div class="home-button-container">
+    <a class="post-single__home-button" href="/">
+      <img
+        src={profilePic.src}
+        class="post-single__home-photo"
+        width="75"
+        height="75"
+        alt={author.name}
+      />
+      <br />
+      Home
+    </a>
+  </div>
+  
+  <div class="post-single">
+    <div class="post-single__inner">
+      <h1 class="post-single__title">
+        {post.isArchived ? "[Archived] " : ""}{post.postTitle}
+      </h1>
+      
+      <div class="post-single__date">
+        {isBeforeDate(post.date, '2007-05-06') ? (
+          <time>Written Sometime Before 2007</time>
+        ) : (
+          formatDate(post.date)
+        )}
+      </div>
+      
+      <div class="post-single__body">
+        <slot />
+      </div>
+
+      <div class="post-single__footer">
+        <div class="post-single__tags">
+          <ul class="post-single__tags-list">
+            {tags &&
+              tags.map((tag: { path: string; label: string; }) => (
+                <li class="post-single__tags-list-item">
+                  <a href={tag.path} class="post-single__tags-list-item-link">
+                    {tag.label}
+                  </a>
+                </li>
+              ))}
+          </ul>
+        </div>
+        
+        <hr />
+        
+        <div>
+          <h2 class="post-single__footer-title">
+            <a class="sidebar__author-title-link" href="/">
+              {author.name}
+            </a>
+          </h2>
+          <p class="post-single__footer-subtitle">{subtitle}</p>
+        </div>
+        
+        <Links data={author} />
+      </div>
+    </div>
+  </div>
+
+  <div class="post-single__footer-nextprev">
+    {prev ? (
+      <a
+        class="post-single__footer-prev"
+        href={"/articles/"+prev.slug+"/"}
+      >
+        <div class="post-single__footer-content">
+          <svg class="post-single__footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+          <div class="post-single__footer-text">
+            <span class="post-single__footer-label">Previous Article</span>
+            <span class="post-single__footer-title">{prev.data.postTitle}</span>
+          </div>
+        </div>
+      </a>
+    ) : null}
+    
+    {next ? (
+      <a
+        class="post-single__footer-next"
+        href={"/articles/"+next.slug+"/"}
+      >
+        <div class="post-single__footer-content">
+          <div class="post-single__footer-text">
+            <span class="post-single__footer-label">Next Article</span>
+            <span class="post-single__footer-title">{next.data.postTitle}</span>
+          </div>
+          <svg class="post-single__footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </div>
+      </a>
+    ) : null}
+  </div>
+</div>

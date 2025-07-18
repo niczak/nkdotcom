@@ -1,0 +1,323 @@
+---
+export interface Props {
+  currentPage?: number;
+  totalPages?: number;
+  startIndex?: number;
+  endIndex?: number;
+  totalItems?: number;
+  previousArticle?: {
+    slug: string;
+    postTitle: string;
+  };
+  nextArticle?: {
+    slug: string;
+    postTitle: string;
+  };
+  type: 'articles' | 'article-navigation';
+  layout?: 'compact' | 'full';
+}
+
+const { currentPage, totalPages, startIndex, endIndex, totalItems, previousArticle, nextArticle, type, layout = 'compact' } = Astro.props;
+---
+
+{type === 'articles' && totalPages && totalPages > 1 && currentPage && startIndex !== undefined && endIndex !== undefined && totalItems && (
+  <div class={`pagination-container ${layout}`}>
+    <div class="pagination">
+      <div class="pagination-info">
+        Page {currentPage} of {totalPages} (Articles {startIndex + 1}-{Math.min(endIndex, totalItems)} of {totalItems})
+      </div>
+      <div class="pagination-links">
+        {currentPage > 1 && (
+          <a href={`/articles/${currentPage - 1}`} class="pagination-link prev">
+            <div class="pagination-content">
+              <svg class="pagination-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+              <span>Previous</span>
+            </div>
+          </a>
+        )}
+        
+        <div class="pagination-numbers">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNum => (
+            <a 
+              href={`/articles/${pageNum}`}
+              class={`pagination-number ${pageNum === currentPage ? 'active' : ''}`}
+            >
+              {pageNum}
+            </a>
+          ))}
+        </div>
+        
+        {currentPage < totalPages && (
+          <a href={`/articles/${currentPage + 1}`} class="pagination-link next">
+            <div class="pagination-content">
+              <span>Next</span>
+              <svg class="pagination-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6"/>
+              </svg>
+            </div>
+          </a>
+        )}
+      </div>
+    </div>
+  </div>
+)}
+
+{type === 'article-navigation' && (previousArticle || nextArticle) && (
+  <div class={`pagination-container ${layout}`}>
+    <div class="pagination">
+      <div class="pagination-links">
+        {nextArticle && (
+          <a href={`/articles/${nextArticle.slug}`} class="pagination-link prev">
+            <div class="pagination-content">
+              <svg class="pagination-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+              <div class="pagination-text">
+                <span class="pagination-label">Next Article</span>
+                <span class="pagination-title">{nextArticle.postTitle}</span>
+              </div>
+            </div>
+          </a>
+        )}
+        {previousArticle && (
+          <a href={`/articles/${previousArticle.slug}`} class="pagination-link next">
+            <div class="pagination-content">
+              <div class="pagination-text">
+                <span class="pagination-label">Previous Article</span>
+                <span class="pagination-title">{previousArticle.postTitle}</span>
+              </div>
+              <svg class="pagination-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6"/>
+              </svg>
+            </div>
+          </a>
+        )}
+      </div>
+    </div>
+  </div>
+)}
+
+<style>
+  .pagination-container {
+    max-width: var(--layout-width-compact);
+    margin: 0 auto;
+    padding: 0 var(--space-lg);
+  }
+
+  .pagination-container.full {
+    max-width: var(--layout-width-compact);
+  }
+
+  .pagination {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 0;
+    border-top: 1px solid rgba(152, 199, 241, 0.2);
+    margin-top: 3rem;
+  }
+
+  .pagination-info {
+    color: var(--color-white);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+  }
+
+  .pagination-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .pagination-numbers {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pagination-number {
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: var(--color-primary);
+    border: 1px solid rgba(152, 199, 241, 0.3);
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 2.5rem;
+    text-align: center;
+    font-weight: 600;
+    background: rgba(152, 199, 241, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pagination-number::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(152, 199, 241, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .pagination-number:hover::before {
+    left: 100%;
+  }
+
+  .pagination-number:hover {
+    background: rgba(152, 199, 241, 0.15);
+    border-color: rgba(152, 199, 241, 0.6);
+    color: var(--color-white);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(152, 199, 241, 0.3);
+  }
+
+  .pagination-number.active {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    color: var(--color-background);
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 15px rgba(152, 199, 241, 0.4);
+    font-weight: 700;
+  }
+
+  .pagination-link {
+    display: flex;
+    text-decoration: none;
+    color: var(--color-primary);
+    padding: 1.25rem 1.5rem;
+    border: 1px solid rgba(152, 199, 241, 0.3);
+    border-radius: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
+    max-width: 45%;
+    background: rgba(152, 199, 241, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pagination-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(152, 199, 241, 0.1) 0%, rgba(238, 111, 107, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .pagination-link:hover::before {
+    opacity: 1;
+  }
+
+  .pagination-link:hover {
+    background: rgba(152, 199, 241, 0.15);
+    border-color: rgba(152, 199, 241, 0.6);
+    color: var(--color-white);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(152, 199, 241, 0.3);
+  }
+
+  .pagination-link.prev {
+    margin-right: auto;
+  }
+
+  .pagination-link.next {
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .pagination-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .pagination-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pagination-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .pagination-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .pagination-icon {
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  .pagination-link:hover .pagination-icon {
+    transform: scale(1.1);
+  }
+
+  .pagination-link.prev:hover .pagination-icon {
+    transform: translateX(-2px) scale(1.1);
+  }
+
+  .pagination-link.next:hover .pagination-icon {
+    transform: translateX(2px) scale(1.1);
+  }
+
+  @media (max-width: 768px) {
+    .pagination-container {
+      padding: 0 var(--space-xs);
+    }
+    
+    .pagination {
+      flex-direction: column;
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .pagination-links {
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .pagination-link {
+      max-width: 100%;
+    }
+
+    .pagination-link.next {
+      text-align: left;
+    }
+
+    .pagination-numbers {
+      order: -1;
+      margin-bottom: 1rem;
+    }
+
+    .pagination-number {
+      padding: 0.6rem 0.8rem;
+      min-width: 2.2rem;
+    }
+  }
+</style> 
